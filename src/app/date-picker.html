@@ -1,0 +1,70 @@
+<div class="relative inline-block w-full max-w-xs font-serif text-left">
+  <!-- Input Trigger -->
+  <button type="button"
+    class="flex items-center justify-between w-full px-4 py-3 bg-white border border-[#dcd9d4] rounded-full shadow-sm cursor-pointer hover:border-[#a8a5a0] transition-colors focus-within:ring-2 focus-within:ring-[#5a5a40] focus-within:border-[#5a5a40] focus:outline-none"
+    (click)="toggleOpen()">
+    <span class="text-[#3d3d3d] text-sm" [class.opacity-40]="!selectedDate()">
+      {{ formattedSelectedDate() || 'Select a date' }}
+    </span>
+    <mat-icon class="text-[#5a5a40]">calendar_today</mat-icon>
+  </button>
+
+  <!-- Calendar Popup -->
+  @if (isOpen()) {
+    <div class="absolute z-10 w-[320px] p-8 mt-2 bg-white border border-[#f0ede9] rounded-[40px] shadow-sm top-full left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-0 origin-top sm:origin-top-left animate-pop-in">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-8">
+        <button 
+          (click)="prevMonth($event)"
+          class="flex items-center justify-center w-10 h-10 border border-[#f0ede9] transition-colors rounded-full hover:bg-[#f2efea] text-[#3d3d3d] focus:outline-none focus:ring-2 focus:ring-[#5a5a40]">
+          <mat-icon class="!w-5 !h-5 text-[20px] leading-none">chevron_left</mat-icon>
+        </button>
+        <div class="font-light text-2xl text-[#3d3d3d]">
+          {{ currentMonthName() }}
+        </div>
+        <button 
+          (click)="nextMonth($event)"
+          class="flex items-center justify-center w-10 h-10 border border-[#f0ede9] transition-colors rounded-full hover:bg-[#f2efea] text-[#3d3d3d] focus:outline-none focus:ring-2 focus:ring-[#5a5a40]">
+          <mat-icon class="!w-5 !h-5 text-[20px] leading-none">chevron_right</mat-icon>
+        </button>
+      </div>
+
+      <!-- Weekdays -->
+      <div class="grid grid-cols-7 gap-y-4 text-center mb-6">
+        @for (day of weekdays; track day) {
+          <div class="text-[10px] uppercase tracking-widest text-[#a8a5a0] font-bold">
+            {{ day }}
+          </div>
+        }
+      </div>
+
+      <!-- Days Grid -->
+      <div class="grid grid-cols-7 gap-y-2">
+        @for (day of calendarDays(); track day.date.toISOString()) {
+          <button
+            (click)="selectDate(day)"
+            class="relative flex items-center justify-center w-10 h-10 text-sm rounded-full mx-auto focus:outline-none focus:ring-2 focus:ring-[#5a5a40] focus:ring-offset-1 group"
+            [ngClass]="{
+              'text-white font-medium': day.isSelected,
+              'text-[#3d3d3d]': !day.isSelected && day.isCurrentMonth,
+              'opacity-20 text-[#3d3d3d]': !day.isSelected && !day.isCurrentMonth
+            }">
+            
+            @if (day.isSelected) {
+              <div class="absolute w-10 h-10 bg-[#5a5a40] rounded-full -z-10"></div>
+            }
+            @if (!day.isSelected && day.isToday) {
+              <div class="absolute w-10 h-10 border-2 border-[#5a5a40] rounded-full -z-10"></div>
+            }
+            @if (!day.isSelected && !day.isToday) {
+              <div class="absolute w-full h-10 bg-[#f2efea] -z-10 opacity-0 group-hover:opacity-100 transition-opacity rounded-full"></div>
+            }
+            
+            <span>{{ day.date.getDate() }}</span>
+          </button>
+        }
+      </div>
+    </div>
+  }
+</div>

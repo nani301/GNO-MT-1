@@ -1,0 +1,6 @@
+{
+  "name": "Date Picker",
+  "description": "A clean, responsive Date Picker component built with Angular signals.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
